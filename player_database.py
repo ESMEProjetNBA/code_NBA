@@ -35,19 +35,13 @@ for j in range(len(url_profile_player)) :
 
 print(url_image_player)
 
+weight_list = []
 
+for z in range(len(url_profile_player)) :
+    actual_url = url_profile_player[z]
+    req = requests.get(actual_url)
+    soup = BeautifulSoup(req.text, 'html.parser')
+    weight = soup.find("span", itemprop="weight")
+    weight_list.append(weight.text.strip())
 
-
-
-"""
-url = 'https://www.nba.com/players?fbclid=IwAR2ODV9Xrzau07UKHaWPe9KinTAY7d0M52kdC3vwBm-PCcOuaDesl9gPHYA'
-req = requests.get(url)
-soup = BeautifulSoup(req.text, 'html.parser')
-all_name = soup.find_all("p", attrs = {"class" : "t6"})
-
-all_processed_name = []
-for price in all_name :
-    all_processed_name.append(price.text.strip())
-
-print(all_processed_name)
-"""
+print(weight_list)
