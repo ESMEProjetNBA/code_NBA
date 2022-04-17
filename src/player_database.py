@@ -14,6 +14,7 @@ player_id_data ['Player'] = player_id_data['Player'].apply(lambda x : x.split("\
 player_id_only = player_id_data.reindex(columns = ["Player"])
 player_id_only.columns = ['ID_Player']
 
+
 #La je transforme la liste des ID des joueurs en liste
 list_of_ID_Player = player_id_only['ID_Player'].tolist()
 
@@ -34,7 +35,9 @@ url_image_player = []
 for j in range(len(url_profile_player)) :
     urlvar2 = "https://www.basketball-reference.com/req/202106291/images/players/" + list_of_ID_Player[j]  + ".jpg"
     url_image_player.append(urlvar2)
-
+    
+df_link_image = pd.DataFrame(url_image_player, columns = ['Link_image'])
+pd.set_option('max_colwidth',40000)
 
 #Maintenant place à la partie scrapping
 #Je vais chercher sur la page profile de chaque joueur le poids de chacun et la taille de chacun (ça prend du temps à s'éxecuter)
@@ -81,6 +84,6 @@ conversions = [30.48, 2.54]
 df_height_from_csv['Height_cm'] = df_height_from_csv['Height'].str.split('-').apply(pd.Series).astype(int).dot(conversions)
 
 #On affiche notre dataframe final contenant toutes les données qu'on veut exploiter par la suite
-final_player_database = (pd.concat([player_data, player_id_only, df_height_from_csv, df_weight_from_csv], axis = 1)) 
+final_player_database = (pd.concat([player_data, player_id_only, df_height_from_csv, df_weight_from_csv, df_link_image], axis = 1)) 
 print(final_player_database)
 
