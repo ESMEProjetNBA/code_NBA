@@ -3,11 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 
 #On règle le problème du / en laissant seulement le nom dans la dataframe
-player_data = pd.read_csv("players_data.csv")
+player_data = pd.read_csv("./csv_files/players_data.csv")
 player_data['Player'] = player_data['Player'].apply(lambda x : x.split("\\")[0])
 
 #Ici inversement on garde l'autre côté du slash qui va nous servir plus tard (j'appelle l'autre côté ID)...
-player_id_data = pd.read_csv("players_data.csv")
+player_id_data = pd.read_csv("./csv_files/players_data.csv")
 player_id_data ['Player'] = player_id_data['Player'].apply(lambda x : x.split("\\")[1])
 
 #L'autre côté du slash (partie droite) on en fait un nouveau dataframe avec une seule colonne contenant seulement la partie droite du /
@@ -68,16 +68,22 @@ for height in range(len(url_profile_player)) :
 df_height = pd.DataFrame(height_list, columns = ['Height'])
 df_weight = pd.DataFrame(weight_list, columns = ['Weight'])
 
-df_height.to_csv('height_data_last_backup.csv', index=False) 
-df_weight.to_csv('weight_data_last_backup.csv', index=False) 
+df_height.to_csv('./csv_files/height_data_last_backup.csv', index=False) 
+df_weight.to_csv('./csv_files/weight_data_last_backup.csv', index=False) 
 
 """
 
 #Maintenant je peux afficher ma dataframe au complet avec les valeurs nettoyés (nom, ID_player) et les statistiques, 
 #et les valeurs ajoutés via le scrapping (poids, tailles)
 
-df_height_from_csv = pd.read_csv("height_data_last_backup.csv")
-df_weight_from_csv = pd.read_csv("weight_data_last_backup.csv")
+df_height_from_csv = pd.read_csv("./csv_files/height_data_last_backup.csv")
+df_weight_from_csv = pd.read_csv("./csv_files/weight_data_last_backup.csv")
 
+#On convertit rapidement la taille de feet/inch à centimètres ça sera plus simple pour la suite de nos visualisations
+conversions = [30.48, 2.54]
+df_height_from_csv['Height_cm'] = df_height_from_csv['Height'].str.split('-').apply(pd.Series).astype(int).dot(conversions)
+
+#On affiche notre dataframe final contenant toutes les données qu'on veut exploiter par la suite
 final_player_database = (pd.concat([player_data, player_id_only, df_height_from_csv, df_weight_from_csv], axis = 1)) 
 print(final_player_database)
+
