@@ -14,9 +14,6 @@ player_id_data ['Player'] = player_id_data['Player'].apply(lambda x : x.split("\
 player_id_only = player_id_data.reindex(columns = ["Player"])
 player_id_only.columns = ['ID_Player']
 
-#Et ici on rajoute la colonne contenant la partie de droite(ID) dans le dataframe de base dans une nouvelle colonne
-print(pd.concat([player_data, player_id_only], axis = 1)) 
-
 #La je transforme la liste des ID des joueurs en liste
 list_of_ID_Player = player_id_only['ID_Player'].tolist()
 
